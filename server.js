@@ -21,7 +21,7 @@ const logout = require("./routers/logout");
 const askAi = require('./routers/askAi')
 
 // Middleware
-server.use(cors({ origin: "*", credentials: true })); // Adjust origin for production
+server.use(cors({ origin: "http://localhost:3000", credentials: true })); // Adjust origin for production
 server.use(helmet()); // Add security headers
 server.use(express.json()); // Built-in JSON parser
 server.use(express.urlencoded({ extended: true })); // Parse URL-encoded data
@@ -32,7 +32,7 @@ server.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: process.env.NODE_ENV === "production", // Secure cookies in production
+      // secure: process.env.NODE_ENV === "production", // Secure cookies in production
       maxAge: 5 * 60 * 1000, // 5 minutes
     },
   })
