@@ -18,7 +18,7 @@ const verifyOtp = require("./routers/verifyOtp");
 const resetPassword = require("./routers/resetPassword");
 const updateProfile = require("./routers/updateprofile");
 const logout = require("./routers/logout");
-const askAi = require('./routers/askAi')
+const chatZEUS = require('./routers/chatZEUS')
 
 // Middleware
 server.use(cors({ origin: ["https://world-wide-admission.vercel.app" , "http://localhost:3000"], credentials: true })); // Adjust origin for production
@@ -47,7 +47,8 @@ server.use("/verifyOtp", verifyOtp); // Verify OTP
 server.use("/resetpassword", resetPassword); // Reset password
 server.use("/updateprofile", updateProfile); // Update profile
 server.use("/logout", logout); // User logout
-server.use("/askAi" , askAi )
+server.use("/chatZEUS" , chatZEUS )
+
 // Default route
 server.get("/", async (req, res) => {
   try {

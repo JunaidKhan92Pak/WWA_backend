@@ -1,5 +1,5 @@
 const express = require("express");
-const { askAI } = require("../controller/aiController");
+const { chatZEUS } = require("../controller/aiController");
 const authenticateAiToken = require("../middlewares/authAi");
 const UserDb = require("../database/models/UserDb");
 const router = express.Router();
@@ -37,7 +37,7 @@ router.post("/", authenticateAiToken, async (req, res) => {
                 country: userData?.country || "N/A",
             };
 
-            const prompt = `Remember this JSON object for future conversation: ${JSON.stringify(userInfo)}`;
+            const prompt =`Remember this JSON object for future conversation: ${JSON.stringify(userInfo)}`;
             messages = [
                 systemMessage,
                 { role: "user", content: prompt },
@@ -54,7 +54,7 @@ router.post("/", authenticateAiToken, async (req, res) => {
         console.log("Messages to AI:", messages);
 
         // Ask AI
-        const answer = await askAI(messages);
+        const answer = await chatZEUS(messages);
 
         // Update conversation history
         conversation.push({ role: "user", content: userPrompt });

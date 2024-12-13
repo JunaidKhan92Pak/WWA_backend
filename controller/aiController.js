@@ -1,7 +1,7 @@
 const OpenAI = require("openai");
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-const askAI = async (messages) => {
+const chatZEUS = async (messages) => {
   try {
     // Ensure messages is an array
     if (!Array.isArray(messages)) {
@@ -27,4 +27,4 @@ const askAI = async (messages) => {
   }
 };
 
-module.exports = { askAI };
+module.exports = { chatZEUS };
