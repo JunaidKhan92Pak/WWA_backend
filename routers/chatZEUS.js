@@ -1,5 +1,5 @@
 const express = require("express");
-const { chatZeus } = require("../controller/aiController");
+const { chatZEUS } = require("../controller/aiController");
 const authenticateAiToken = require("../middlewares/authAi");
 const router = express.Router();
 const UserDb = require("../database/models/UserDb");
@@ -99,8 +99,8 @@ router.post("/", authenticateAiToken, async (req, res) => {
         messages = [
           systemMessage,
           {
-            role: "user",
-            content: userPrompt + " " + JSON.stringify(studentObject),
+            role: "assistant",
+            content: studentObject
           },
         ];
         sessionStore.hasInteracted = true;
@@ -138,14 +138,14 @@ router.post("/", authenticateAiToken, async (req, res) => {
       }
     }
     // Call AI service to get a response
-    const answer = await chatZeus(messages);
+    const answer = await chatZEUS(messages);
     // Update session with user prompt and AI response
     userSession.conversation.push({ role: "user", content: userPrompt });
     console.log(userSession.conversation) + "Users coversation from session";
     res.status(200).json({ success: true, answer });
   } catch (error) {
     console.error("Error:", error.message);
-    res.status(500).json({ success: false, message: "Server error" });
+    res.status(500).json({ success: false, message: `Server error ${error}`});
   }
 });
 module.exports = router;
