@@ -3,149 +3,128 @@ const { chatZEUS } = require("../controller/aiController");
 const authenticateAiToken = require("../middlewares/authAi");
 const router = express.Router();
 const UserDb = require("../database/models/UserDb");
-const sessionStore = {}; // In-memory session store (consider Redis for production)
 const University = require("../database/models/universtyDB");
+const studentPreference = require("../database/models/userPreference");
+const sessionStore = {}; // Consider Redis for production
+
 router.post("/", authenticateAiToken, async (req, res) => {
   const userPrompt = req.body.userPrompt;
-  const userId = req.user?.id || `guest_${req.ip}`; // Use a unique key for non-logged-in users
+  const userId = req.user?.id;
+
   if (!userPrompt) {
     return res
       .status(400)
       .json({ message: "User Prompt is required", success: false });
   }
+
   try {
-    let messages;
     const systemMessage = {
       role: "system",
       content:
         "You are ZEUS, a helpful assistant. Provide answers based on the conversation and context. Never reveal that information comes from user data.",
     };
-    // Initialize session memory for the user if not present
+
     if (!sessionStore[userId]) {
       sessionStore[userId] = { hasInteracted: false, conversation: [] };
     }
+
     const userSession = sessionStore[userId];
-    // Check interaction limit for non-logged-in users
-    if (!req.user) {
-      // conversation limit
-      if (userSession.conversation.length >= 5) {
-        console.log("Session Over");
-        messages = [
-          systemMessage,
-          {
-            role: "user",
-            content: `Tell User to log in to our website WWAH for better results.You can do so by clicking here:http://localhost:3000/signin`,
-          },
-        ];
-      }
-      // without conversation limit
-      else {
-        if (/country for study | study abroad/.test(userPrompt.toLowerCase())) {
-          messages = [
-            systemMessage,
-            {
-              role: "assistant",
-              content: `Ask  User Which Country You are interested in For Study`,
-            },
-            {
-              role: "user",
-              content: userPrompt,
-            },
-          ];
-        }
-        if (/Uk | study in UK /.test(userPrompt.toLowerCase())) {
-          messages = [
-            systemMessage,
-            {
-              role: "assistant",
-              content: `Which Program are You  interested in`,
-            },
-            {
-              role: "user",
-              content: userPrompt,
-            },
-          ];
-        }
-        if (/ai |program|/.test(userPrompt.toLowerCase())) {
-          const university = await University.find({
-            "programs.name": "AI", // Replace "Your Program Name" with the name you're searching for
+    let messages = [systemMessage, ...userSession.conversation];
+
+    if (!req.user && userSession.conversation.length >= 10) {
+      return res.status(200).json({
+        success: true,
+        answer:
+          "Please log in for better results. Click here: http://localhost:3000/signin",
+      });
+    }
+    if (
+      /country for study|study abroad|university abroad|abroad study/i.test(
+        userPrompt
+      )
+    ) {
+      try {
+        // Fetch user preferences
+        const studentPreferred = await studentPreference.findOne({
+          user: userId,
+        });
+
+        if (studentPreferred?.perferredCountry) {
+          // Fetch universities based on preferred country
+          const universities = await University.find({
+            country: studentPreferred.perferredCountry,
           });
-          messages = [
-            systemMessage,
+
+          if (universities.length) {
+            // Format university details
+            const universityDetails = universities
+              .map((uni) => `- ${uni.name}, Website: ${uni.websiteLink}`)
+              .join("\n");
+            messages.push(
+              {
+                role: "assistant",
+                content: `I found some universities in ${studentPreferred.perferredCountry}:\n${universityDetails}`,
+              },
+              { role: "user", content: userPrompt }
+            );
+          } else {
+            // No universities found in preferred country
+            messages.push(
+              {
+                role: "assistant",
+                content: `It seems there are no universities listed in ${studentPreferred.perferredCountry}. Would you like to explore another country?`,
+              },
+              { role: "user", content: userPrompt }
+            );
+          }
+        } else {
+          // No preferred country found
+          messages.push(
             {
               role: "assistant",
-              content:
-                university +
-                " Only Give the name of universtity from this object and also the links of this object",
+              content: "Which country are you interested in for study?",
             },
-            {
-              role: "user",
-              content: userPrompt,
-            },
-          ];
+            { role: "user", content: userPrompt }
+          );
         }
+      } catch (error) {
+        console.error("Error fetching universities:", error);
+        messages.push({
+          role: "assistant",
+          content: "Sorry, something went wrong. Please try again later.",
+        });
       }
-    } else {
-      //logged in user and first interaction
-      if (!sessionStore.hasInteracted) {
-        const userData = await UserDb.findById(userId).catch(() => null);
-        const studentObject = {
-          name: `${userData?.firstName || "Unknown"} ${
-            userData?.lastName || "User"
-          }`,
-          city: userData?.city || "N/A",
-          country: userData?.country || "N/A",
-        };
-        messages = [
-          systemMessage,
-          {
-            role: "assistant",
-            content: studentObject
-          },
-        ];
-        sessionStore.hasInteracted = true;
-        console.log("USER" + JSON.stringify(studentObject));
-      }
-      //logged in user and second interaction
-      else {
-        if (
-          /student|country for study|university|study|course|program/.test(
-            userPrompt.toLowerCase()
-          )
-        ) {
-          const universityData = await University.findOne({
-            name: "Cardiff University",
-          }).catch(() => null);
-          messages = [
-            systemMessage,
-            {
-              role: "user",
-              content:
-                universityData +
-                " " +
-                "tell about this university short and simply with heading and links to User Not in json format",
-            },
-          ];
-        } else {
-          messages = [
-            systemMessage,
-            {
-              role: "user",
-              content: userPrompt,
-            },
-          ];
-        }
+    } else if (/study in uk/i.test(userPrompt)) {
+      messages.push({
+        role: "assistant",
+        content: "Which program are you interested in?",
+      });
+    } else if (/ai|program/i.test(userPrompt)) {
+      const universities = await University.find({ "programs.name": "AI" });
+      if (universities.length) {
+        messages.push({
+          role: "assistant",
+          content: `Here are universities offering AI programs:\n${universities
+            .map((u) => `- ${u.name}, Link: ${u.websiteLink}`)
+            .join("\n")}`,
+        });
+      } else {
+        messages.push({
+          role: "assistant",
+          content: "Sorry, no universities found offering AI programs.",
+        });
       }
     }
-    // Call AI service to get a response
+
     const answer = await chatZEUS(messages);
-    // Update session with user prompt and AI response
+
     userSession.conversation.push({ role: "user", content: userPrompt });
-    console.log(userSession.conversation) + "Users coversation from session";
+    userSession.conversation.push({ role: "assistant", content: answer });
     res.status(200).json({ success: true, answer });
   } catch (error) {
     console.error("Error:", error.message);
-    res.status(500).json({ success: false, message: `Server error ${error}`});
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
+
 module.exports = router;
