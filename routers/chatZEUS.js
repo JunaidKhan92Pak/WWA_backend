@@ -5,7 +5,6 @@ const router = express.Router();
 const UserDb = require("../database/models/UserDb");
 const University = require("../database/models/universtyDB");
 const studentPreference = require("../database/models/userPreference");
-const { getUserData } = require("../controller/getUserData");
 
 const sessionStore = {}; // Consider Redis for production
 router.post("/", authenticateAiToken, async (req, res) => {
