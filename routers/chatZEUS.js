@@ -12,9 +12,10 @@ router.post("/", authenticateAiToken, async (req, res) => {
   const userId = req.user?.id;
   const user = await UserDb.findById({ _id: userId }).catch(() => null);
   const userData = {
-    name: user.firstName + " " + user.lastName,
-    city: user.city,
-    country: user.country,
+    name: user?.firstName || null,
+    city: user?.city || null,
+    country: user?.country || null,
+    program: "AI",
   };
   if (!userPrompt) {
     return res
