@@ -1,4 +1,3 @@
-
 // Importing necessary modules
 const express = require("express");
 const router = express.Router();
@@ -21,6 +20,7 @@ router.post("/", async (req, res) => {
   try {
     // Find the user in the database
     const user = await UserDb.findOne({ email });
+
     if (!user) {
       return res.status(401).json({
         message: "Invalid credentials.",
@@ -46,9 +46,9 @@ router.post("/", async (req, res) => {
 
     // Set token as an HTTP-only cookie
     res.cookie("authToken", token, {
-     httpOnly: true, // Prevent client-side access
+      httpOnly: true, // Prevent client-side access
       sameSite: "strict", // Mitigate CSRF attacks
-     secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
 
@@ -57,10 +57,13 @@ router.post("/", async (req, res) => {
       message: "Sign In Successful",
       success: true,
       token,
+      user: user.firstName + " " + user.lastName,
     });
   } catch (error) {
     // Log the error and send a generic response
-    console.error(`[${new Date().toISOString()}] Backend error: ${error.message}`);
+    console.error(
+      `[${new Date().toISOString()}] Backend error: ${error.message}`
+    );
     return res.status(500).json({
       message: "An internal server error occurred.",
       success: false,

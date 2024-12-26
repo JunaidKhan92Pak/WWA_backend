@@ -1,74 +1,75 @@
 // Importing necessary modules
 const express = require("express");
 const router = express.Router();
+const UserDb = require("../database/models/UserDb"); // Importing the User model for interacting with the user database
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const UserDb = require("../database/models/UserDb"); // Importing the User database model for user data handling
 
-// POST Route for user login Authentication
-router.post("/", async (req, res) => {
-  const { email, password } = req.body;
-
-  // Validate input
-  if (!email || !/\S+@\S+\.\S+/.test(email)) {
-    return res.status(400).json({
-      message: "Please provide a valid email address.",
-      success: false,
-    });
-  }
-
+// GET Route for Default Home Page
+router.get("/", async (req, res) => {
   try {
-    // Find the user in the database
-    const user = await UserDb.findOne({ email });
-
-    if (!user) {
-      return res.status(401).json({
-        message: "Invalid credentials.",
-        success: false,
-      });
-    }
-
-    // Validate the password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({
-        message: "Invalid credentials.",
-        success: false,
-      });
-    }
-
-    // Generate a JWT token
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET_KEY || "defaultSecretKey", // Fallback for missing secret key
-      { expiresIn: "1d" }
-    );
-
-    // Set token as an HTTP-only cookie
-    res.cookie("authToken", token, {
-      httpOnly: true, // Prevent client-side access
-      sameSite: "strict", // Mitigate CSRF attacks
-      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
-    });
-
-    console.log("Sign In Successful");
-    return res.status(200).json({
-      message: "Sign In Successful",
-      success: true,
-      token,
-      user: user.firstName + " " + user.lastName,
-    });
+    res.status(200).send("All fine");
   } catch (error) {
-    // Log the error and send a generic response
-    console.error(
-      `[${new Date().toISOString()}] Backend error: ${error.message}`
-    );
-    return res.status(500).json({
-      message: "An internal server error occurred.",
-      success: false,
-    });
+    res.status(500).send("There is an error");
   }
 });
 
+// POST Route for User Signup
+router.post("/", async (req, res) => {
+  const { firstName, lastName, email, password } = req.body;
+
+  // Validate the required fields
+  if (!firstName || !lastName || !email || !password) {
+    return res.status(400).json({ message: "All fields are required", success: false });
+  }
+
+  try {
+    // Check if a user with the given email already exists in the database
+    const userExists = await UserDb.findOne({ email });
+    if (userExists) {
+      return res.status(409).json({ message: "Email is already in use", success: false, signup: false });
+    }
+
+    // Password length validation
+    if (password.length < 8) {
+      return res.status(400).json({ message: "Password must be at least 8 characters long", success: false });
+    }
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new user instance
+    const newUser = new UserDb({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+    });
+
+    // Generate a JWT token
+    const token = jwt.sign(
+      { id: newUser._id },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: "1h" }
+    );
+
+    // Save the user to the database
+    await newUser.save();
+    res.cookie("authToken", token, {
+      sameSite: "strict", // Prevent CSRF
+      maxAge: 3600000, // 1 hour
+    });
+    // Respond with success
+    res.status(201).json({
+      message: "User successfully signed up",
+      success: true,
+      signup: true,
+      token,
+    });
+  } catch (error) {
+    console.error(`Error during signup: ${error.message}`);
+    res.status(500).json({ message: "Internal server error in backennd", success: false });
+  }
+});
+
+// Exporting the router to be used in other parts of the application
 module.exports = router;
