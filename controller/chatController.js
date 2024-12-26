@@ -14,7 +14,7 @@ const chatController = (userPrompt, userData, universities) => {
           { role: "user", content: userPrompt },
           {
             role: "assistant",
-            content: `I found some universities in ${studentPreferred.perferredCountry}:\n${universityDetails} tell user about this University and its website link .Your Answer should be simple and short `,
+            content: `I found some universities in ${user.preferdCountry}:\n${universityDetails} tell user about this University and its website link .Your Answer should be simple and short `,
           }
         );
         console.log(JSON.stringify(messages) + "message to ai");
@@ -81,31 +81,31 @@ const chatController = (userPrompt, userData, universities) => {
       }
     
   } 
-  else if (/ai|ai program/i.test(userPrompt)) {
-    const universities = University.find({ "programs.name": "AI" });
-    if (universities.length) {
-      messages.push(
-        { role: "user", content: userPrompt },
-        {
-          role: "assistant",
-          content: `Here are universities offering AI programs:\n${universities
-            .map((u) => `- ${u.name}, Link: ${u.websiteLink}`)
-            .join(
-              "\n"
-            )}.Tell the names and webite links of these universities.The answer should be short and simple`,
-        }
-      );
-    } else {
-      messages.push({
-        role: "assistant",
-        content: "Sorry, no universities found offering AI programs.",
-      });
-    }
-  } 
+  // else if (/ai|ai program/i.test(userPrompt)) {
+  //   const universities = University.find({ "programs.name": "AI" });
+  //   if (universities.length) {
+  //     messages.push(
+  //       { role: "user", content: userPrompt },
+  //       {
+  //         role: "assistant",
+  //         content: `Here are universities offering AI programs:\n${universities
+  //           .map((u) => `- ${u.name}, Link: ${u.websiteLink}`)
+  //           .join(
+  //             "\n"
+  //           )}.Tell the names and webite links of these universities.The answer should be short and simple`,
+  //       }
+  //     );
+  //   } else {
+  //     messages.push({
+  //       role: "assistant",
+  //       content: "Sorry, no universities found offering AI programs.",
+  //     });
+  //   }
+  // } 
   else {
     messages.push({ role: "user", content: userPrompt });
   }
-  const answer = chatZEUS(messages , userData);
+  const answer = chatZEUS(messages , userData , universities);
   return answer;
 };
 module.exports = { chatController };

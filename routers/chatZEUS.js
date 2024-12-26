@@ -11,12 +11,13 @@ router.post("/", authenticateAiToken, async (req, res) => {
   const userId = req.user?.id;
   const user = await getUserData(userId);
   let universities;
-
-  if (user.preferdCountry) {
+  console.log("user", user);
+  if (user?.preferdCountry) {
     universities = await University.find({
-      country: user.preferdCountry,
+      country: user.preferdCountry
     });
   }
+
   if(!userPrompt){
      return res.status(200).json({succes:false , answer:"Please enter a message"})
   }
@@ -33,8 +34,9 @@ router.post("/", authenticateAiToken, async (req, res) => {
           "Please log in for better results. Click here: https://world-wide-admission.vercel.app/signin",
       });
     }
+
     else{
-      const answer = await chatController(userPrompt, userData, universities);
+      const answer = await chatController(userPrompt, user, universities);
       res.status(200).json({ success: true, answer });
     }
     userSession.conversation.push({ role: "user", content: userPrompt });

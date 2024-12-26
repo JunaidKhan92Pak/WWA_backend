@@ -1,7 +1,7 @@
 const OpenAI = require("openai");
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const UserDb = require("../database/models/UserDb");
-const chatZEUS = async (messages, userData) => {
+const chatZEUS = async (messages, userData , universities) => {
   try {
     // Ensure messages is an array
     if (!Array.isArray(messages)) {
@@ -15,10 +15,12 @@ const chatZEUS = async (messages, userData) => {
           content:
             "You are ZEUS, a helpful assistant. Provide the latest and simplest answers.never reveal that the information was sourced from the user data.",
         },
-        // {
-        //   role: "assistant",
-        //   content: "Univesity of Lahore is for AI Program and Oxford",
-        // },
+        {
+          role: "assistant",
+          content:
+          JSON.stringify(universities) +
+          "This is university data in json format.Respond to user according to this data. if no data found then ask user in which country or university he is interested in",
+        },
         {
           role: "assistant",
           content:
