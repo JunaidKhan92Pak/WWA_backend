@@ -11,7 +11,7 @@ router.post("/", authenticateAiToken, async (req, res) => {
   const userId = req.user?.id;
   const user = await getUserData(userId);
   let universities;
-  console.log("user", user);
+  
   if (user?.preferdCountry) {
     universities = await University.find({
       country: user.preferdCountry
