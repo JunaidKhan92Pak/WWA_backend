@@ -32,7 +32,7 @@ server.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      // secure: process.env.NODE_ENV === "production", // Secure cookies in production
+      secure: process.env.NODE_ENV === "production", // Secure cookies in production
       maxAge: 5 * 60 * 1000, // 5 minutes
     },
   })
