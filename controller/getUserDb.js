@@ -23,7 +23,7 @@ const getUserDb = async (userId) => {
       name: `${user.firstName} ${user.lastName}`,
       country: user.country || "Not specified",
       city: user.city || "Not specified",
-      preferdCountry: "Canada",
+      preferdCountry: studentPreferenceData?.perferredCountry || "Not specified",
     };
      
     return userDetails;

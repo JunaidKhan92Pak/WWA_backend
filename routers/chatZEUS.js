@@ -30,7 +30,6 @@ router.post("/", authenticateAiToken, async (req, res) => {
           "Please log in for better results. Click here: https://world-wide-admission.vercel.app/signin",
       });
     }
-
     else{
       const answer = await chatController(userPrompt, user, universities);
       res.status(200).json({ success: true, answer });
