@@ -23,9 +23,9 @@ const getUserDb = async (userId) => {
       name: `${user.firstName} ${user.lastName}`,
       country: user.country || "Not specified",
       city: user.city || "Not specified",
-      preferdCountry: studentPreferenceData?.perferredCountry || "Not specified",
+      preferdCountry: "Canada",
     };
-
+     
     return userDetails;
   } catch (error) {
     console.error("Error fetching user or preferences from database:", error.message);
