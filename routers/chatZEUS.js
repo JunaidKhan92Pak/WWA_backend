@@ -5,7 +5,9 @@ const authenticateAiToken = require("../middlewares/authAi");
 const  getUserData  = require("../controller/getUserDb");
 const { chatController } = require("../controller/chatController");
 const sessionStore = {}; // Consider Redis for production
-const universitiesData = JSON.parse(fs.readFileSync("./universityData.json", "utf-8"));
+const universitiesData = JSON.parse(fs.readFileSync("../universityData.json", "utf-8"));
+// const universitiesData = JSON.parse(fs.readFileSync("./universityData.json", "utf-8"));
+
 
 router.post("/", authenticateAiToken, async (req, res) => {
   const userPrompt = req.body.userPrompt;
