@@ -42,45 +42,45 @@ const chatController = (userPrompt, userData, universities) => {
       console.log(messages + "message to ai  by non login user");
     }
   }
-  else if (/in uk|uk|canada|usa/i.test(userPrompt)) {
-      if (userData.perferredCountry) {
-        if (universities.length) {
-          const universityDetails = universities
-            .map((uni) => `- ${uni.name}, Website: ${uni.websiteLink}`)
-            .join("\n");
-          messages.push(
-            { role: "user", content: userPrompt },
-            {
-              role: "assistant",
-              content: `I found some universities in ${studentPreferred.perferredCountry}:\n${universityDetails} tell user about this University and its website link .Your Answer should be simple and short `,
-            }
-          );
-          console.log(JSON.stringify(messages) + "message to ai ");
-        } else {
-          // No universities found in preferred country
-          messages.push(
-            { role: "user", content: userPrompt },
-            {
-              role: "assistant",
-              content: `Just ask from user Would you like to explore another country?.Answer should be short and simple`,
-            }
-          );
-          console.log(messages + "message to ai login user with no country");
-        }
-      } else {
-        // No preferred country found
-        messages.push(
-          { role: "user", content: userPrompt },
-          {
-            role: "assistant",
-            content:
-              "Which country are you interested in for study?.Answer should be short and simple",
-          }
-        );
-        console.log(messages + "message to ai  by non login user");
-      }
+  // else if (/in uk|uk|canada|usa/i.test(userPrompt)) {
+  //     if (userData.perferredCountry) {
+  //       if (universities.length) {
+  //         const universityDetails = universities
+  //           .map((uni) => `- ${uni.name}, Website: ${uni.websiteLink}`)
+  //           .join("\n");
+  //         messages.push(
+  //           { role: "user", content: userPrompt },
+  //           {
+  //             role: "assistant",
+  //             content: `I found some universities in ${studentPreferred.perferredCountry}:\n${universityDetails} tell user about this University and its website link .Your Answer should be simple and short `,
+  //           }
+  //         );
+  //         console.log(JSON.stringify(messages) + "message to ai ");
+  //       } else {
+  //         // No universities found in preferred country
+  //         messages.push(
+  //           { role: "user", content: userPrompt },
+  //           {
+  //             role: "assistant",
+  //             content: `Just ask from user Would you like to explore another country?.Answer should be short and simple`,
+  //           }
+  //         );
+  //         console.log(messages + "message to ai login user with no country");
+  //       }
+  //     } else {
+  //       // No preferred country found
+  //       messages.push(
+  //         { role: "user", content: userPrompt },
+  //         {
+  //           role: "assistant",
+  //           content:
+  //             "Which country are you interested in for study?.Answer should be short and simple",
+  //         }
+  //       );
+  //       console.log(messages + "message to ai  by non login user");
+  //     }
     
-  } 
+  // } 
   // else if (/ai|ai program/i.test(userPrompt)) {
   //   const universities = University.find({ "programs.name": "AI" });
   //   if (universities.length) {

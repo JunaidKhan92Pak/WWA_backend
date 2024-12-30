@@ -17,8 +17,8 @@ const chatZEUS = async (messages, userData, universities) => {
           role: "assistant",
           content: `Preloaded data: 
           - Universities: ${JSON.stringify(universities)} 
-          - User Data: ${JSON.stringify(userData)}.
-          Use this data to respond to user inquiries. If no university data is found, ask the user about their preferences (e.g., country or specific university).`
+          - User Data: ${JSON.stringify(userData)}.          
+          Use this data to respond to user inquiries. If no university data is found or User tell you about University then tell few university  and ask  user about their preferences (e.g., country or specific university) and redirect them to visit this link for more information: [http://localhost:3000/countrypage].`
         },
         ...messages,
       ],
