@@ -5,7 +5,7 @@ const authenticateAiToken = require("../middlewares/authAi");
 const  getUserData  = require("../controller/getUserDb");
 const { chatController } = require("../controller/chatController");
 const sessionStore = {}; // Consider Redis for production
-// const universitiesData = JSON.parse(fs.readFileSync("./universityData.json", "utf-8"));
+const universitiesData = JSON.parse(fs.readFileSync("./universityData.json", "utf-8"));
 
 router.post("/", authenticateAiToken, async (req, res) => {
   const userPrompt = req.body.userPrompt;
@@ -15,7 +15,7 @@ router.post("/", authenticateAiToken, async (req, res) => {
      return res.status(200).json({succes:false , answer:"Please enter a message"})
   }
   try {
-    // const universities = universitiesData.countries.filter((country) => country.name === user?.preferdCountry)
+    const universities = universitiesData.countries.filter((country) => country.name === user?.preferdCountry)
     if (!sessionStore[userId]) {
       sessionStore[userId] = { hasInteracted: false, conversation: [] };
     }
