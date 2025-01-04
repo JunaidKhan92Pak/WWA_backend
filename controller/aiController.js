@@ -1,6 +1,9 @@
+const fs = require("fs");
 const OpenAI = require("openai");
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-const chatZEUS = async (messages, userData, universities) => {
+const universitiesData = JSON.parse(fs.readFileSync("./universityData.json", "utf-8"));
+const chatZEUS = async (messages, userData) => {
+  const universities = universitiesData
   try {
     // Ensure messages is an array
     if (!Array.isArray(messages)) {
@@ -15,17 +18,15 @@ const chatZEUS = async (messages, userData, universities) => {
         },
         {
           role: "assistant",
-          content: `Preloaded data: 
+          content: `Preloaded data:
           - Universities: ${JSON.stringify(universities)} 
-          - User Data: ${JSON.stringify(userData)}.          
-          Use this data to respond to user inquiries. If no university data is found or User tell you about University then tell few university  and ask  user about their preferences (e.g., country or specific university) and redirect them to visit this link for more information: [http://localhost:3000/countrypage].`
-        },
+          - User Data: ${JSON.stringify(userData)}.
+          Use this data to respond to user inquiries. If no university data is found or if the user provides information about universities, offer suggestions for a few universities. Ask for their preferences (e.g., country or specific university). Redirect them to visit this link for more details: [http://localhost:3000/countrypage].`
+        },        
         ...messages,
       ],
     });
-
-    const answer =
-      completion.choices[0]?.message?.content || "No response from AI.";
+    const answer = completion.choices[0]?.message?.content || "No response from AI.";
     return answer;
   } catch (error) {
     // Enhanced error handling
