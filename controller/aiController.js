@@ -1,9 +1,9 @@
 const fs = require("fs");
 const OpenAI = require("openai");
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-// const universitiesData = JSON.parse(fs.readFileSync("./universityData.json", "utf-8"));
+const universitiesData = JSON.parse(fs.readFileSync("./universityData.json", "utf-8"));
 const chatZEUS = async (messages, userData) => {
-  // const universities = universitiesData
+  const universities = universitiesData ? universitiesData : null
   try {
     // Ensure messages is an array
     if (!Array.isArray(messages)) {
@@ -19,7 +19,7 @@ const chatZEUS = async (messages, userData) => {
         {
           role: "assistant",
           content: `I have access to the following preloaded data:
-          - Universities: ${JSON.stringify(universities)}
+          // - Universities: ${JSON.stringify(universities ? universities : null)}
           - User Data: ${JSON.stringify(userData)}
           I will use this information to provide accurate and helpful responses to your inquiries. If no relevant university data is found or if you ask about universities not in the dataset, I will suggest suitable options based on the available data. 
           Note: I am currently in a training phase and continuously improving. Expect more precise and optimized responses in the coming days. Thank you for your patience!`
