@@ -1,7 +1,7 @@
-const fs = require("fs");
+
 const OpenAI = require("openai");
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-const universitiesData = JSON.parse(fs.readFileSync("./universityData.json", "utf-8"));
+const universitiesData = require("../universityData.json");
 const chatZEUS = async (messages, userData) => {
   const universities = universitiesData ? universitiesData : null
   try {
