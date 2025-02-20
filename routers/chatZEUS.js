@@ -35,7 +35,7 @@ router.post("/", authenticateAiToken, async (req, res) => {
       messages.push(
         // {role:"assistant" , content: `${userSession.conversation} Response to user according to the old conversation`},
         { role: "user", content: userPrompt }
-      );      
+      );
       const answer = await chatZEUS(messages, user);
       // const answer = await chatController(userPrompt, user, universities
       res.status(200).json({ success: true, answer });

@@ -20,6 +20,7 @@ const updateProfile = require("./routers/updateprofile");
 const logout = require("./routers/logout");
 const chatZEUS = require('./routers/chatZEUS')
 const bookAppointment= require("./routers/bookAppointment")
+
 // Middleware
 server.use(cors({ origin: ["https://world-wide-admission.vercel.app" , "http://localhost:3000"], credentials: true })); // Adjust origin for production
 server.use(helmet()); // Add security headers

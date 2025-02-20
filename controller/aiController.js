@@ -1,9 +1,9 @@
 const fs = require("fs");
 const OpenAI = require("openai");
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-const universitiesData = JSON.parse(fs.readFileSync("./universityData.json", "utf-8"));
+// const universitiesData = JSON.parse(fs.readFileSync("./universityData.json", "utf-8"));
 const chatZEUS = async (messages, userData) => {
-  const universities = universitiesData
+  // const universities = universitiesData
   try {
     // Ensure messages is an array
     if (!Array.isArray(messages)) {
@@ -18,15 +18,16 @@ const chatZEUS = async (messages, userData) => {
         },
         {
           role: "assistant",
-          content: `Preloaded data:
-          - Universities: ${JSON.stringify(universities)} 
-          - User Data: ${JSON.stringify(userData)}.
-          Use this data to respond to user inquiries. If no university data is found or if the user provides information about universities, offer suggestions for a few universities. Ask for their preferences (e.g., country or specific university). Redirect them to visit this link for more details: [http://localhost:3000/countrypage].`
-        },        
+          content: `I have access to the following preloaded data:
+          - Universities: ${JSON.stringify(universities)}
+          - User Data: ${JSON.stringify(userData)}
+          I will use this information to provide accurate and helpful responses to your inquiries. If no relevant university data is found or if you ask about universities not in the dataset, I will suggest suitable options based on the available data. 
+          Note: I am currently in a training phase and continuously improving. Expect more precise and optimized responses in the coming days. Thank you for your patience!`
+        },
         ...messages,
       ],
     });
-    const answer = completion.choices[0]?.message?.content || "No response from AI.";
+    const answer = completion.choices[0]?.message?.content || "Zeus Server is busy.Please Try Later";
     return answer;
   } catch (error) {
     // Enhanced error handling
