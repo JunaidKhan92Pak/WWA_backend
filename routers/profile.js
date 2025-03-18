@@ -7,6 +7,8 @@ const authenticateToken = require('../middlewares/authMiddleware')
 router.get('/', authenticateToken, (req, res) => {
        res.json({ message: "Login Successful", user: req.user });
 });
-
+router.get('/data', authenticateToken, (req, res) => {
+       res.json({ message: "Data Fetch", user: req.user });
+});
 
 module.exports = router;
