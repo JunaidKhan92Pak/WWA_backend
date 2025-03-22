@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
+
 const helmet = require("helmet"); // For securing HTTP headers
 require("dotenv").config(); // Load environment variables
 
@@ -20,7 +21,8 @@ const updateProfile = require("./routers/updateprofile");
 const logout = require("./routers/logout");
 const chatZEUS = require('./routers/chatZEUS')
 const bookAppointment = require("./routers/bookAppointment")
-
+const contactUs = require("./routers/contactus");
+const scheduleSession = require('./routers/scheduleSession')
 // Middleware
 server.use(cors({ origin: ["https://wwah.vercel.app", "http://localhost:3000"], credentials: true })); // Adjust origin for production
 server.use(helmet()); // Add security headers
@@ -50,7 +52,8 @@ server.use("/updateprofile", updateProfile); // Update profile
 server.use("/logout", logout); // User logout
 server.use("/chatZEUS", chatZEUS)
 server.use("/bookappointment", bookAppointment);
-
+server.use("/contactus", contactUs)
+server.use('/scheduleSession', scheduleSession)
 // Default route
 server.get("/", async (req, res) => {
   try {
