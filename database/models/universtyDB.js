@@ -29,5 +29,7 @@ const universitySchema = new mongoose.Schema({
     required: true, // Website link is required
   },
 });
-const University = mongoose.model("University", universitySchema);
+const University =
+  mongoose.models.University || mongoose.model("University", universitySchema);
+// const University = mongoose.model("University", universitySchema);
 module.exports = University;

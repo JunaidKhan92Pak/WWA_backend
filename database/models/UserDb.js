@@ -19,10 +19,11 @@ const userSchema = new mongoose.Schema(
       required: true,
       minlength: 8,
     },
-    contactNo :{
-      type:Number
+    contactNo: {
+      type: Number,
     },
     dob: { type: Date },
+    countryCode: { type: String },
     nationality: { type: String },
     country: { type: String },
     city: { type: String },
@@ -39,7 +40,7 @@ const userSchema = new mongoose.Schema(
 );
 
 // Create a model
-const UserDb = mongoose.model("UserDb", userSchema);
-
+// const UserDb = mongoose.model("UserDb", userSchema);
+const UserDb = mongoose.models.UserDb || mongoose.model("UserDb", userSchema);
 // Export the model
 module.exports = UserDb;

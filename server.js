@@ -6,7 +6,6 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
-
 const helmet = require("helmet"); // For securing HTTP headers
 require("dotenv").config(); // Load environment variables
 
@@ -22,7 +21,10 @@ const logout = require("./routers/logout");
 const chatZEUS = require('./routers/chatZEUS')
 const bookAppointment = require("./routers/bookAppointment")
 const contactUs = require("./routers/contactus");
-const scheduleSession = require('./routers/scheduleSession')
+const scheduleSession = require('./routers/scheduleSession');
+const accommodationBooking = require("./routers/studentDashboard/accommodationBooking");
+const airportPickup = require("./routers/studentDashboard/airportPickup");
+const completeApplication = require("./routers/studentDashboard/completeApplication");
 // Middleware
 server.use(cors({ origin: ["https://wwah.vercel.app", "http://localhost:3000"], credentials: true })); // Adjust origin for production
 server.use(helmet()); // Add security headers
@@ -53,7 +55,11 @@ server.use("/logout", logout); // User logout
 server.use("/chatZEUS", chatZEUS)
 server.use("/bookappointment", bookAppointment);
 server.use("/contactus", contactUs)
-server.use('/scheduleSession', scheduleSession)
+server.use('/scheduleSession', scheduleSession);
+server.use("/studentDashboard/accommodationBooking", accommodationBooking);
+server.use("/studentDashboard/accommodationBooking", accommodationBooking);
+server.use("/studentDashboard/airportPickup", airportPickup);
+server.use("/studentDashboard/completeApplication", completeApplication);
 // Default route
 server.get("/", async (req, res) => {
   try {
