@@ -64,6 +64,7 @@ router.post("/", async (req, res) => {
       success: true,
       signup: true,
       token,
+      user: newUser
     });
   } catch (error) {
     console.error(`Error during signup: ${error.message}`);
