@@ -57,7 +57,7 @@ router.post("/", async (req, res) => {
       message: "Sign In Successful",
       success: true,
       token,
-      user: user.firstName + " " + user.lastName,
+      user: user,
     });
   } catch (error) {
     // Log the error and send a generic response
