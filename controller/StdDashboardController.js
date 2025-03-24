@@ -9,9 +9,9 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-console.log("Cloudinary Config:", cloudinary.config());
+
 cloudinary.api.resources({ type: "upload" }, (error, result) => {
-  console.log(result.resources, "resources");
+
 });
 const stdDashboardController = {
   // get basic info
@@ -47,7 +47,6 @@ const stdDashboardController = {
   },
   // Basic Information Controller
   basicInformation: async (req, res) => {
-    console.log(req.body);
     try {
       const userId = req.user?.id; // Safely access req.user and get userId
 
@@ -182,7 +181,6 @@ const stdDashboardController = {
     } catch (error) {
       // Log the error for debugging
       console.error("Error updating Basic information:", error);
-
       // Return a more specific error message when possible
       const errorMessage = error.message || "Internal Server Error";
 
@@ -195,7 +193,6 @@ const stdDashboardController = {
   },
   // update basic info
   updateBasicInformation: async (req, res) => {
-    console.log(req.body);
     try {
       const userId = req.user?.id; // Ensure user is authenticated
 
