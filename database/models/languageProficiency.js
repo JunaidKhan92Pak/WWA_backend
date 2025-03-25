@@ -9,12 +9,12 @@ const languageProficiencySchema = new mongoose.Schema(
     },
     proficiencyLevel: {
       type: String,
-      enum: ["Beginner", "Intermediate", "Advanced", "Native"], // Restrict to specific levels
+      enum: ["native speaker", "test", "willingToTest"], // Restrict to specific levels
       //required: true,
     },
     proficiencyTest: {
       type: String,
-      default: "", // Optional field with a default empty string
+      enum: ["IELTS", "PTE", "TOEFL", "DUOLINGO", "Language Cert", "others"],
     },
     proficiencyTestScore: {
       type: String,
@@ -24,16 +24,8 @@ const languageProficiencySchema = new mongoose.Schema(
   { timestamps: true } // Automatically add createdAt and updatedAt fields
 );
 
-// Create the model
-// const LanguageProficiency = mongoose.model(
-//   "LanguageProficiency",
-//   languageProficiencySchema
-// );
-
 const LanguageProficiency =
   mongoose.models.LanguageProficiency ||
   mongoose.model("LanguageProficiency", languageProficiencySchema);
 
-// export { LanguageProficiency };
-// Export the model
 module.exports = LanguageProficiency;
