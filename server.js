@@ -30,8 +30,12 @@ const studentData = require("./routers/adminDashboard/studentData");
 // Middleware
 server.use(
   cors({
-    origin: ["https://wwah.vercel.app", "http://localhost:3000", "https://www.worldwideadmissionshub.com"],
+    origin: ["https://www.worldwideadmissionshub.com" , "https://wwah.vercel.app", "http://localhost:3000"],
     credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"], // Additional headers
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
+    optionsSuccessStatus: 200, // Allow requests with valid credentials to proceed
+    
   })
 ); // Adjust origin for production
 server.use(helmet()); // Add security headers
