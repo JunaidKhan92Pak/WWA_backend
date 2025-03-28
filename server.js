@@ -25,6 +25,8 @@ const scheduleSession = require("./routers/scheduleSession");
 const accommodationBooking = require("./routers/studentDashboard/accommodationBooking");
 const airportPickup = require("./routers/studentDashboard/airportPickup");
 const completeApplication = require("./routers/studentDashboard/completeApplication");
+const createAdminRoute = require("./routers/createAdmin");
+const studentData = require("./routers/adminDashboard/studentData");
 // Middleware
 server.use(
   cors({
@@ -50,6 +52,7 @@ server.use(
 
 // Routes
 server.use("/signup", signUp); // User signup
+server.use("/createAdmin", createAdminRoute); // User signup
 server.use("/signin", signIn); // User signin
 server.use("/profile", profile); // User profile
 server.use("/forgotpassword", forgotPassword); // Forgot password
@@ -65,6 +68,7 @@ server.use("/studentDashboard/accommodationBooking", accommodationBooking);
 server.use("/studentDashboard/accommodationBooking", accommodationBooking);
 server.use("/studentDashboard/airportPickup", airportPickup);
 server.use("/studentDashboard/completeApplication", completeApplication);
+server.use("/adminDashboard/studentData", studentData);
 // Default route
 server.get("/", async (req, res) => {
   try {
