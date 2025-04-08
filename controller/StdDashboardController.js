@@ -10,9 +10,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-cloudinary.api.resources({ type: "upload" }, (error, result) => {
-
-});
+cloudinary.api.resources({ type: "upload" }, (error, result) => {});
 const stdDashboardController = {
   // get basic info
   getBasicInformation: async (req, res) => {
@@ -45,7 +43,7 @@ const stdDashboardController = {
       });
     }
   },
-  // Basic Information Controller
+  //create Basic Information Controller
   basicInformation: async (req, res) => {
     try {
       const userId = req.user?.id; // Safely access req.user and get userId
@@ -74,6 +72,7 @@ const stdDashboardController = {
         countryOfResidence,
         maritalStatus,
         religion,
+        nativeLanguage,
         // Address fields
         homeAddress,
         detailedAddress,
@@ -131,6 +130,7 @@ const stdDashboardController = {
             countryOfResidence,
             maritalStatus,
             religion,
+            nativeLanguage,
             homeAddress,
             detailedAddress,
             country,
@@ -221,6 +221,7 @@ const stdDashboardController = {
         "countryOfResidence",
         "maritalStatus",
         "religion",
+        "nativeLanguage",
         "homeAddress",
         "detailedAddress",
         "country",
@@ -315,7 +316,7 @@ const stdDashboardController = {
       });
     }
   },
-  // Application Information Controller
+  //create Application Information Controller
   applicationInformation: async (req, res) => {
     console.log(req.body);
     try {
@@ -520,7 +521,6 @@ const stdDashboardController = {
       res.status(500).json({ error: "Internal server error" });
     }
   },
-
   // delete Documents Controller
   deleteDocument: async (req, res) => {
     console.log("Cloudinary Env Variables:");
@@ -558,10 +558,6 @@ const stdDashboardController = {
       // **Filter out documents that match the given file IDs**
       const fileIdsToDelete = files.map((file) => file._id);
 
-      // Remove the documents from user's document list
-      // userDocument.documents = userDocument.documents.filter(
-      //   (doc) => !fileIdsToDelete.includes(doc._id.toString())
-      // );
       // Remove the specific files from each document
       userDocument.documents.forEach((doc) => {
         doc.files = doc.files.filter(
@@ -574,25 +570,6 @@ const stdDashboardController = {
         (doc) => doc.files.length > 0
       );
 
-      // Delete files from Cloudinary
-      // for (const file of files) {
-      //   try {
-      //     const urlParts = file.url.split("/");
-      //     const fileNameWithExtension = urlParts.pop(); // Last part of URL
-      //     const publicId = fileNameWithExtension.split(".")[0]; // Extract public ID
-
-      //     // Ensure publicId is valid
-      //     if (!publicId) {
-      //       console.error("Invalid Cloudinary Public ID:", file.url);
-      //       continue; // Skip this file if extraction fails
-      //     }
-
-      //     const result = await cloudinary.uploader.destroy(publicId);
-      //     console.log(`Deleted ${publicId}:`, result);
-      //   } catch (err) {
-      //     console.error("Error deleting file from Cloudinary:", err);
-      //   }
-      // }
       for (const file of files) {
         try {
           const publicId = file.public_id; // Ensure you store `public_id` in the database
