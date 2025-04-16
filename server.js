@@ -258,7 +258,6 @@ server.use(
     origin: [
       "https://wwah.vercel.app",
       "http://localhost:3000",
-      "https://www.worldwideadmissionshub.com",
     ],
     credentials: true,
   })
